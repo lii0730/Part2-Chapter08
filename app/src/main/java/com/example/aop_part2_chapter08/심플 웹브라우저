@@ -15,3 +15,7 @@
 { Constraint Layout
   EditText
   WebView } 활용
+
+
+* canGoBack() -> 이전 기록 항목이 있는지 여부 확인 (Boolean)
+* canGoForward() -> 전달 기록항목이 있는지 여부 확인(Boolean)
