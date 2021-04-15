@@ -4,6 +4,7 @@ import android.graphics.Bitmap
 import android.os.Bundle
 import android.view.KeyEvent
 import android.view.View
+import android.view.inputmethod.EditorInfo
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.EditText
@@ -51,6 +52,7 @@ class MainActivity : AppCompatActivity() {
     private fun initSettings() {
         mainWebView.apply {
             webViewClient = WebViewClientClass()
+            settings.javaScriptEnabled = true
             loadUrl(defaultAddress)
         }
         addressEditText.apply {
@@ -73,6 +75,14 @@ class MainActivity : AppCompatActivity() {
                 false
         }
 
+//        addressEditText.setOnEditorActionListener { v, actionId, event ->
+//            //TODO: action button 눌렀을 떄 발생하는 이벤트
+//            if(actionId == EditorInfo.IME_ACTION_DONE){
+//                mainWebView.loadUrl(v.text.toString())
+//            }
+//
+//            return@setOnEditorActionListener false
+//        }
     }
 
     private fun refreshLayout() {
@@ -112,7 +122,7 @@ class MainActivity : AppCompatActivity() {
                 if(mainWebView.canGoBack()){
                     mainWebView.loadUrl(defaultAddress)
                     addressList.add(++currentPosition, defaultAddress)
-                    addressEditText.setText(addressList[0])
+                    addressEditText.setText(defaultAddress)
                 }
             }
         }

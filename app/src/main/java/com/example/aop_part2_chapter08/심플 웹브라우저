@@ -13,9 +13,11 @@
 - 웹사이트 로딩 정도 확인
 
 { Constraint Layout
-  EditText
+  EditText - IME_OPIONS 사용
   WebView } 활용
 
 
 * canGoBack() -> 이전 기록 항목이 있는지 여부 확인 (Boolean)
 * canGoForward() -> 전달 기록항목이 있는지 여부 확인(Boolean)
+
+*IME_OPTIONS -> Action 명확하게 정의
