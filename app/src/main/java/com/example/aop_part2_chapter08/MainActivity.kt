@@ -6,6 +6,7 @@ import android.view.KeyEvent
 import android.view.MotionEvent
 import android.view.View
 import android.view.inputmethod.EditorInfo
+import android.webkit.URLUtil
 import android.webkit.WebChromeClient
 import android.webkit.WebView
 import android.webkit.WebViewClient
@@ -57,21 +58,25 @@ class MainActivity : AppCompatActivity() {
 
                 override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
                     super.onPageStarted(view, url, favicon)
-                    loadingProgressBar.visibility = View.VISIBLE
-                    loadingProgressBar.progress = view?.progress!!
+                    loadingProgressBar.show()
                 }
 
                 override fun onPageFinished(view: WebView?, url: String?) {
                     super.onPageFinished(view, url)
                     url?.let { updateAddress(it) }
                     refreshLayout.isRefreshing = false
-                    loadingProgressBar.progress = view?.progress!!
-                    loadingProgressBar.visibility = View.INVISIBLE
+                    loadingProgressBar.hide()
                 }
 
                 override fun onPageCommitVisible(view: WebView?, url: String?) {
                     super.onPageCommitVisible(view, url)
                     loadingProgressBar.progress = view?.progress!!
+                }
+            }
+            webChromeClient = object : WebChromeClient() {
+                override fun onProgressChanged(view: WebView?, newProgress: Int) {
+                    super.onProgressChanged(view, newProgress)
+                    loadingProgressBar.progress = newProgress
                 }
             }
             settings.javaScriptEnabled = true
@@ -80,9 +85,6 @@ class MainActivity : AppCompatActivity() {
         addressEditText.apply {
             setText(defaultAddress)
             setSelection(addressEditText.length())
-            setOnClickListener {
-                selectAll()
-            }
         }
     }
 
@@ -99,7 +101,12 @@ class MainActivity : AppCompatActivity() {
         addressEditText.setOnEditorActionListener { v, actionId, event ->
             //TODO: action button 눌렀을 떄 발생하는 이벤트
             if (actionId == EditorInfo.IME_ACTION_DONE) {
-                mainWebView.loadUrl(v.text.toString())
+                val newUrl = v.text.toString()
+                if(URLUtil.isNetworkUrl(newUrl)) {
+                    mainWebView.loadUrl(newUrl)
+                } else {
+                    mainWebView.loadUrl("http://$newUrl")
+                }
             }
             return@setOnEditorActionListener false
         }
