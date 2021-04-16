@@ -3,8 +3,10 @@ package com.example.aop_part2_chapter08
 import android.graphics.Bitmap
 import android.os.Bundle
 import android.view.KeyEvent
+import android.view.MotionEvent
 import android.view.View
 import android.view.inputmethod.EditorInfo
+import android.webkit.WebChromeClient
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.EditText
@@ -31,13 +33,9 @@ class MainActivity : AppCompatActivity() {
         findViewById(R.id.loadingProgressBar)
     }
 
-    private val refreshLayout : SwipeRefreshLayout by lazy {
+    private val refreshLayout: SwipeRefreshLayout by lazy {
         findViewById(R.id.refreshLayout)
     }
-
-    private lateinit var addressList: ArrayList<String>
-    private var currentPosition : Int = 0
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,46 +49,76 @@ class MainActivity : AppCompatActivity() {
 
     private fun initSettings() {
         mainWebView.apply {
-            webViewClient = WebViewClientClass()
+            webViewClient = object : WebViewClient() {
+                override fun shouldOverrideUrlLoading(view: WebView?, url: String?): Boolean {
+                    view?.let { it.loadUrl(url!!) }
+                    return true
+                }
+
+                override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
+                    super.onPageStarted(view, url, favicon)
+                    loadingProgressBar.visibility = View.VISIBLE
+                    loadingProgressBar.progress = view?.progress!!
+                }
+
+                override fun onPageFinished(view: WebView?, url: String?) {
+                    super.onPageFinished(view, url)
+                    url?.let { updateAddress(it) }
+                    refreshLayout.isRefreshing = false
+                    loadingProgressBar.progress = view?.progress!!
+                    loadingProgressBar.visibility = View.INVISIBLE
+                }
+
+                override fun onPageCommitVisible(view: WebView?, url: String?) {
+                    super.onPageCommitVisible(view, url)
+                    loadingProgressBar.progress = view?.progress!!
+                }
+            }
             settings.javaScriptEnabled = true
             loadUrl(defaultAddress)
         }
         addressEditText.apply {
             setText(defaultAddress)
             setSelection(addressEditText.length())
+            setOnClickListener {
+                selectAll()
+            }
         }
-
-        addressList = ArrayList<String>()
-        addressList.add(currentPosition, defaultAddress)
     }
 
     private fun intentWebBrowser() {
         addressEditText.setOnKeyListener { v, keyCode, event ->
-            if(event.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER){
+            if (event.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
                 val newURL = addressEditText.text.toString()
                 mainWebView.loadUrl(newURL)
-                addressList.add(++currentPosition, newURL)
                 true
             } else
                 false
         }
 
-//        addressEditText.setOnEditorActionListener { v, actionId, event ->
-//            //TODO: action button 눌렀을 떄 발생하는 이벤트
-//            if(actionId == EditorInfo.IME_ACTION_DONE){
-//                mainWebView.loadUrl(v.text.toString())
-//            }
-//
-//            return@setOnEditorActionListener false
-//        }
+        addressEditText.setOnEditorActionListener { v, actionId, event ->
+            //TODO: action button 눌렀을 떄 발생하는 이벤트
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                mainWebView.loadUrl(v.text.toString())
+            }
+            return@setOnEditorActionListener false
+        }
     }
 
     private fun refreshLayout() {
-        refreshLayout.setOnRefreshListener(object : SwipeRefreshLayout.OnRefreshListener{
+        refreshLayout.setOnRefreshListener(object : SwipeRefreshLayout.OnRefreshListener {
             override fun onRefresh() {
                 mainWebView.reload()
             }
         })
+    }
+
+    private fun webLoadCompleted() {
+
+    }
+
+    private fun updateAddress(address: String) {
+        addressEditText.setText(address)
     }
 
 
@@ -100,7 +128,6 @@ class MainActivity : AppCompatActivity() {
                 if (mainWebView.canGoBack()) {
                     //TODO: 뒤로갈 페이지가 있으면 뒤로가기 버튼 클릭시 이동
                     mainWebView.goBack()
-                    addressEditText.setText(addressList[--currentPosition])
                 } else {
                     finish()
                 }
@@ -110,7 +137,6 @@ class MainActivity : AppCompatActivity() {
                 if (mainWebView.canGoForward()) {
                     //TODO: 앞 페이지가 있으면 앞으로가기 버튼 클릭시 이동
                     mainWebView.goForward()
-                    addressEditText.setText(addressList[++currentPosition])
                 }
             }
         }
@@ -119,17 +145,13 @@ class MainActivity : AppCompatActivity() {
     fun homeButtonClicked(view: View) {
         when (view.id) {
             R.id.homeButton -> {
-                if(mainWebView.canGoBack()){
-                    mainWebView.loadUrl(defaultAddress)
-                    addressList.add(++currentPosition, defaultAddress)
-                    addressEditText.setText(defaultAddress)
-                }
+                mainWebView.loadUrl(defaultAddress)
             }
         }
     }
 
     override fun onBackPressed() {
-        if(mainWebView.canGoBack()){
+        if (mainWebView.canGoBack()) {
             mainWebView.goBack()
         } else {
             finish()

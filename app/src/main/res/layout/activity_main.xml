@@ -8,62 +8,75 @@
 
     <!--    ?attr/actionBarSize-->
     <!--    actionBarSize대로 설정-->
-    <ImageButton
-        android:id="@+id/homeButton"
-        android:layout_width="40dp"
-        android:layout_height="30dp"
-        android:layout_marginLeft="5dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginBottom="5dp"
-        android:background="@drawable/ic_baseline_home_24"
-        android:onClick="homeButtonClicked"
-        android:padding="5dp"
-        app:layout_constraintBottom_toTopOf="@+id/loadingProgressBar"
-        app:layout_constraintRight_toLeftOf="@+id/addressEditText"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 
-    <EditText
-        android:id="@+id/addressEditText"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/toolBar"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="5dp"
-        android:background="@drawable/edittext_layout"
-        android:imeOptions="actionDone"
-        android:importantForAutofill="no"
-        android:inputType="textUri"
-        android:paddingHorizontal="10dp"
-        android:textSize="11sp"
+        android:layout_height="?actionBarSize"
         app:layout_constraintBottom_toTopOf="@+id/loadingProgressBar"
-        app:layout_constraintLeft_toRightOf="@+id/homeButton"
-        app:layout_constraintRight_toLeftOf="@+id/goBackButton"
-        app:layout_constraintTop_toTopOf="@+id/homeButton" />
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-    <ImageButton
-        android:id="@+id/goBackButton"
-        android:layout_width="40dp"
-        android:layout_height="0dp"
-        android:layout_marginRight="1dp"
-        android:layout_marginBottom="5dp"
-        android:background="@drawable/ic_baseline_arrow_back_24"
-        android:onClick="BackForwardButtonClicked"
-        app:layout_constraintBottom_toTopOf="@+id/loadingProgressBar"
-        app:layout_constraintLeft_toRightOf="@+id/addressEditText"
-        app:layout_constraintRight_toLeftOf="@+id/goForwardButton"
-        app:layout_constraintTop_toTopOf="@+id/homeButton" />
+        <ImageButton
+            android:id="@+id/homeButton"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:backgroundTint="@color/white"
+            android:onClick="homeButtonClicked"
+            android:padding="5dp"
+            android:src="@drawable/ic_baseline_home_24"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toLeftOf="@+id/addressEditText"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    <ImageButton
-        android:id="@+id/goForwardButton"
-        android:layout_width="40dp"
-        android:layout_height="0dp"
-        android:layout_marginLeft="1dp"
-        android:layout_marginBottom="5dp"
-        android:background="@drawable/ic_baseline_arrow_forward_24"
-        android:onClick="BackForwardButtonClicked"
-        app:layout_constraintBottom_toTopOf="@+id/loadingProgressBar"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintLeft_toRightOf="@+id/goBackButton"
-        app:layout_constraintTop_toTopOf="@+id/homeButton" />
+        <EditText
+            android:id="@+id/addressEditText"
+            android:layout_width="0dp"
+            android:layout_height="30dp"
+            android:background="@drawable/edittext_layout"
+            android:imeOptions="actionDone"
+            android:importantForAutofill="no"
+            android:inputType="textUri"
+            android:paddingHorizontal="10dp"
+            android:textSize="11sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toRightOf="@+id/homeButton"
+            app:layout_constraintRight_toLeftOf="@+id/goBackButton"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageButton
+            android:id="@+id/goBackButton"
+            android:layout_width="40dp"
+            android:layout_height="0dp"
+            android:layout_marginRight="1dp"
+            android:backgroundTint="@color/white"
+            android:onClick="BackForwardButtonClicked"
+            android:src="@drawable/ic_baseline_arrow_back_24"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toRightOf="@+id/addressEditText"
+            app:layout_constraintRight_toLeftOf="@+id/goForwardButton"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageButton
+            android:id="@+id/goForwardButton"
+            android:layout_width="40dp"
+            android:layout_height="0dp"
+            android:layout_marginLeft="1dp"
+            android:backgroundTint="@color/white"
+            android:onClick="BackForwardButtonClicked"
+            android:src="@drawable/ic_baseline_arrow_forward_24"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintLeft_toRightOf="@+id/goBackButton"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
 
     <androidx.core.widget.ContentLoadingProgressBar
         android:id="@+id/loadingProgressBar"
@@ -74,7 +87,7 @@
         app:layout_constraintBottom_toTopOf="@+id/refreshLayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/homeButton" />
+        app:layout_constraintTop_toBottomOf="@+id/toolBar" />
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/refreshLayout"
