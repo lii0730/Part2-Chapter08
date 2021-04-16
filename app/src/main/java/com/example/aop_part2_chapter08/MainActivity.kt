@@ -112,11 +112,6 @@ class MainActivity : AppCompatActivity() {
             }
         })
     }
-
-    private fun webLoadCompleted() {
-
-    }
-
     private fun updateAddress(address: String) {
         addressEditText.setText(address)
     }
@@ -155,31 +150,6 @@ class MainActivity : AppCompatActivity() {
             mainWebView.goBack()
         } else {
             finish()
-        }
-    }
-
-    inner class WebViewClientClass : WebViewClient() {
-        override fun shouldOverrideUrlLoading(view: WebView?, url: String?): Boolean {
-            view?.loadUrl(url!!)
-            return true
-        }
-
-        override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
-            super.onPageStarted(view, url, favicon)
-            loadingProgressBar.visibility = ProgressBar.VISIBLE
-            mainWebView.visibility = View.INVISIBLE
-        }
-
-        override fun onPageCommitVisible(view: WebView?, url: String?) {
-            super.onPageCommitVisible(view, url)
-            loadingProgressBar.visibility = ProgressBar.GONE
-            mainWebView.visibility = View.VISIBLE
-        }
-
-        override fun onPageFinished(view: WebView?, url: String?) {
-            super.onPageFinished(view, url)
-            addressEditText.setText(url)
-            refreshLayout.isRefreshing = false
         }
     }
 }
